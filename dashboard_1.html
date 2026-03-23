@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erik Pimenta — Minha Rotina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #18181f;
+  --bg4: #1e1e28;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0f0f5;
+  --muted: #6b6b80;
+  --muted2: #9090a8;
+  --accent: #7c6dfa;
+  --accent2: #a594fd;
+  --teal: #2dd4bf;
+  --amber: #f59e0b;
+  --red: #f43f5e;
+  --green: #22c55e;
+  --purple-glow: rgba(124,109,250,0.15);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* BG texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 20% 0%, rgba(124,109,250,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 80% 100%, rgba(45,212,191,0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 32px 28px 60px; }
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.header-left h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #f0f0f5 30%, var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header-left p {
+  font-size: 13px;
+  color: var(--muted2);
+  margin-top: 4px;
+  font-family: 'DM Mono', monospace;
+}
+.header-right {
+  text-align: right;
+}
+.clock {
+  font-family: 'DM Mono', monospace;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -1px;
+}
+.date-str {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-family: 'DM Mono', monospace;
+}
+
+/* BLOCO ATUAL */
+.bloco-atual-bar {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.bab-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-family: 'DM Mono', monospace; }
+.bab-nome { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--accent2); margin-top: 2px; }
+.bab-right { text-align: right; }
+.bab-prox-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-family: 'DM Mono', monospace; }
+.bab-prox { font-size: 14px; color: var(--muted2); margin-top: 2px; }
+.pulse { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: 8px; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+/* GRID PRINCIPAL */
+.grid-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.grid-bottom {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+}
+
+/* CARDS */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  transition: border-color .2s;
+}
+.card:hover { border-color: var(--border2); }
+.card-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* MÉTRICAS */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.metric-item {
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 14px;
+}
+.metric-lbl { font-size: 11px; color: var(--muted); margin-bottom: 4px; font-family: 'DM Mono', monospace; }
+.metric-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); }
+.metric-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.metric-val.green { color: var(--green); }
+.metric-val.amber { color: var(--amber); }
+.metric-val.accent { color: var(--accent2); }
+
+/* FATURAMENTO */
+.fat-meta { margin-bottom: 16px; }
+.fat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.fat-label { font-size: 12px; color: var(--muted2); }
+.fat-val { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; }
+.progress-wrap { background: var(--bg4); border-radius: 99px; height: 5px; overflow: hidden; margin-bottom: 12px; }
+.progress-fill { height: 5px; border-radius: 99px; transition: width .5s ease; }
+.p-accent { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.p-teal { background: var(--teal); }
+.p-amber { background: var(--amber); }
+
+/* HÁBITOS */
+.habit-list { display: flex; flex-direction: column; gap: 8px; }
+.habit-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background .15s;
+  border: 1px solid transparent;
+}
+.habit-item:hover { background: var(--bg4); }
+.habit-item.done { border-color: rgba(34,197,94,0.2); }
+.habit-check {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border2);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.habit-check.done { background: var(--green); border-color: var(--green); }
+.habit-check.done::after { content: '✓'; font-size: 12px; color: #fff; font-weight: 600; }
+.habit-name { font-size: 13px; color: var(--text); flex: 1; }
+.habit-name.done { color: var(--muted); text-decoration: line-through; }
+.habit-time { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+/* PROGRESS RING */
+.ring-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.ring-text { }
+.ring-count { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--text); line-height: 1; }
+.ring-total { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.ring-msg { font-size: 12px; color: var(--muted2); margin-top: 4px; }
+
+/* ROTINA */
+.rotina-list { display: flex; flex-direction: column; gap: 2px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
+.rotina-list::-webkit-scrollbar { width: 3px; }
+.rotina-list::-webkit-scrollbar-track { background: transparent; }
+.rotina-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+.rotina-item {
+  display: flex;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  align-items: flex-start;
+  transition: background .15s;
+  border-left: 2px solid transparent;
+}
+.rotina-item:hover { background: var(--bg3); }
+.rotina-item.ativo {
+  background: var(--bg3);
+  border-left-color: var(--accent);
+}
+.rotina-item.passado { opacity: .4; }
+.rotina-hora { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); min-width: 46px; padding-top: 1px; }
+.rotina-info { flex: 1; }
+.rotina-nome { font-size: 13px; font-weight: 500; color: var(--text); }
+.rotina-item.ativo .rotina-nome { color: var(--accent2); font-weight: 600; }
+.rotina-desc { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.tag-pill {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 99px;
+  font-family: 'DM Mono', monospace;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.tag-ineg { background: rgba(124,109,250,.15); color: var(--accent2); }
+.tag-foco { background: rgba(45,212,191,.12); color: var(--teal); }
+.tag-cliente { background: rgba(245,158,11,.12); color: var(--amber); }
+.tag-vida { background: rgba(34,197,94,.12); color: var(--green); }
+.tag-off { background: var(--bg4); color: var(--muted2); }
+
+/* METAS OPERAÇÕES */
+.op-list { display: flex; flex-direction: column; gap: 14px; }
+.op-item { }
+.op-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.op-nome { font-size: 13px; font-weight: 500; color: var(--text); }
+.op-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted2); }
+.op-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* NOTAS */
+.nota-area {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  width: 100%;
+  min-height: 100px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.7;
+  resize: none;
+  outline: none;
+  transition: border-color .2s;
+}
+.nota-area:focus { border-color: var(--border2); }
+.nota-area::placeholder { color: var(--muted); }
+
+.focos-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.foco-item { display: flex; align-items: center; gap: 10px; }
+.foco-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); min-width: 16px; }
+.foco-input {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  width: 100%;
+  outline: none;
+  transition: border-color .2s;
+}
+.foco-input:focus { border-color: var(--accent); }
+.foco-input::placeholder { color: var(--muted); }
+
+/* CLIENTES COUNTER */
+.clientes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cl-item { background: var(--bg3); border-radius: 10px; padding: 14px; text-align: center; }
+.cl-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; }
+.cl-nome { font-size: 11px; color: var(--muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
+.cl-controls { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+.cl-btn { background: var(--bg4); border: 1px solid var(--border); color: var(--muted2); border-radius: 6px; width: 26px; height: 26px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.cl-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* SAVE INDICATOR */
+.save-ind { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 8px; opacity: 0; transition: opacity .3s; }
+.save-ind.show { opacity: 1; }
+
+/* GOOGLE CALENDAR */
+.gcal-connect {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 28px 16px; gap: 12px; text-align: center;
+}
+.gcal-icon { width: 40px; height: 40px; margin-bottom: 4px; }
+.gcal-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 8px; padding: 10px 20px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: opacity .2s;
+}
+.gcal-btn:hover { opacity: .85; }
+.gcal-btn-secondary {
+  background: var(--bg3); color: var(--muted2);
+  border: 1px solid var(--border2); border-radius: 8px; padding: 8px 16px;
+  font-family: 'DM Sans', sans-serif; font-size: 12px;
+  cursor: pointer; transition: background .15s;
+}
+.gcal-btn-secondary:hover { background: var(--bg4); }
+.gcal-status { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.gcal-connected { display: none; }
+.gcal-event {
+  display: flex; gap: 10px; padding: 8px 0;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+}
+.gcal-event:last-child { border-bottom: none; }
+.gcal-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.gcal-event-time { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); min-width: 50px; }
+.gcal-event-title { font-size: 13px; color: var(--text); }
+.gcal-event-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.notif-banner {
+  position: fixed; top: 20px; right: 20px; z-index: 999;
+  background: var(--bg3); border: 1px solid var(--accent);
+  border-radius: 12px; padding: 14px 18px; max-width: 300px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.5);
+  transform: translateX(120%); transition: transform .3s ease;
+}
+.notif-banner.show { transform: translateX(0); }
+.notif-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent2); margin-bottom: 4px; }
+.notif-body { font-size: 12px; color: var(--muted2); line-height: 1.5; }
+.notif-close { position: absolute; top: 10px; right: 12px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; }
+.gcal-api-input {
+  background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px;
+  padding: 9px 12px; color: var(--text); font-family: 'DM Mono', monospace;
+  font-size: 12px; width: 100%; outline: none; transition: border-color .2s;
+}
+.gcal-api-input:focus { border-color: var(--accent); }
+.gcal-api-input::placeholder { color: var(--muted); }
+
+@media (max-width: 1100px) {
+  .grid-main { grid-template-columns: 1fr 1fr; }
+  .grid-bottom { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .grid-main { grid-template-columns: 1fr; }
+  .header { flex-direction: column; gap: 12px; }
+  .header-right { text-align: left; }
+  .app { padding: 20px 16px 40px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Erik Pimenta</h1>
+      <p>Rotina · Sistema de Alta Performance</p>
+      <p id="dateStr" style="font-size:12px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace"></p>
+    </div>
+    <div class="header-right">
+      <div class="clock" id="clock">--:--</div>
+      <div class="date-str">São Paulo, BR</div>
+    </div>
+  </div>
+
+  <!-- BLOCO ATUAL -->
+  <div class="bloco-atual-bar">
+    <div>
+      <div class="bab-label"><span class="pulse"></span>bloco atual</div>
+      <div class="bab-nome" id="blocoAtualNome">—</div>
+    </div>
+    <div class="bab-right">
+      <div class="bab-prox-label">próximo</div>
+      <div class="bab-prox" id="proximoBloco">—</div>
+    </div>
+  </div>
+
+  <!-- GRID PRINCIPAL -->
+  <div class="grid-main">
+
+    <!-- FATURAMENTO -->
+    <div class="card">
+      <div class="card-title">faturamento vs meta</div>
+      <div class="fat-meta">
+        <div class="fat-row">
+          <span class="fat-label">Atual (estimado)</span>
+          <span class="fat-val" style="color:var(--teal)">R$ <span id="fatAtual">20.000</span></span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-fill p-teal" id="pbFat" style="width:20%"></div>
+        </div>
+        <div class="fat-row">
+          <span class="fat-label">Agência (15 clientes)</span>
+          <span class="fat-val" style="color:var(--muted2)">R$ <span id="fatAgencia">15.000</span></span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-fill p-accent" id="pbAg" style="width:15%"></div>
+        </div>
+        <div class="fat-row">
+          <span class="fat-label">TikTok Shop</span>
+          <span class="fat-val" style="color:var(--amber)">R$ <span id="fatTiktok">5.000</span></span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-fill p-amber" id="pbTk" style="width:5%"></div>
+        </div>
+      </div>
+      <div style="background:var(--bg3);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">meta mensal</div>
+          <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent2)">R$100.000</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">prazo</div>
+          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text)">12 meses</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTES -->
+    <div class="card">
+      <div class="card-title">clientes por operação</div>
+      <div class="clientes-grid">
+        <div class="cl-item">
+          <div class="cl-num" style="color:var(--accent2)" id="clAgencia">15</div>
+          <div class="cl-nome">agência</div>
+          <div class="cl-controls">
+            <button class="cl-btn" onclick="changeClientes('ag',-1)">−</button>
+            <button class="cl-btn" onclick="changeClientes('ag',1)">+</button>
+          </div>
+        </div>
+        <div class="cl-item">
+          <div class="cl-num" style="color:var(--amber)" id="clCardapio">0</div>
+          <div class="cl-nome">cardápio</div>
+          <div class="cl-controls">
+            <button class="cl-btn" onclick="changeClientes('cd',-1)">−</button>
+            <button class="cl-btn" onclick="changeClientes('cd',1)">+</button>
+          </div>
+        </div>
+        <div class="cl-item">
+          <div class="cl-num" style="color:var(--teal)" id="clTiktok">0</div>
+          <div class="cl-nome">tiktok</div>
+          <div class="cl-controls">
+            <button class="cl-btn" onclick="changeClientes('tk',-1)">−</button>
+            <button class="cl-btn" onclick="changeClientes('tk',1)">+</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div class="card-title" style="margin-bottom:10px">metas de clientes</div>
+        <div class="op-list">
+          <div class="op-item">
+            <div class="op-header">
+              <span class="op-nome">Agência</span>
+              <span class="op-val" id="opAgLabel">15 / 25</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-fill p-accent" id="opAgBar" style="width:60%"></div></div>
+          </div>
+          <div class="op-item">
+            <div class="op-header">
+              <span class="op-nome">Cardápio</span>
+              <span class="op-val" id="opCdLabel">0 / 200</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-fill p-amber" id="opCdBar" style="width:0%"></div></div>
+            <div class="op-sub">R$500/cliente → meta R$100k</div>
+          </div>
+          <div class="op-item">
+            <div class="op-header">
+              <span class="op-nome">TikTok Shop</span>
+              <span class="op-val" id="opTkLabel">escalando</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-fill" style="width:20%;background:var(--teal)"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HÁBITOS -->
+    <div class="card">
+      <div class="card-title">hábitos inegociáveis</div>
+      <div class="ring-wrap">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="24" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>
+          <circle id="ringCircle" cx="30" cy="30" r="24" fill="none" stroke="var(--green)" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 30 30)" style="transition:stroke-dashoffset .5s ease"/>
+        </svg>
+        <div class="ring-text">
+          <div class="ring-count"><span id="hDone">0</span><span style="font-size:18px;color:var(--muted)">/5</span></div>
+          <div class="ring-msg" id="hMsg">nenhum ainda</div>
+        </div>
+      </div>
+      <div class="habit-list">
+        <div class="habit-item" id="hi0" onclick="toggleHabit(0)">
+          <div class="habit-check" id="hc0"></div>
+          <span class="habit-name" id="hn0">Acordar às 5h</span>
+          <span class="habit-time">05h00</span>
+        </div>
+        <div class="habit-item" id="hi1" onclick="toggleHabit(1)">
+          <div class="habit-check" id="hc1"></div>
+          <span class="habit-name" id="hn1">Academia</span>
+          <span class="habit-time">05h30</span>
+        </div>
+        <div class="habit-item" id="hi2" onclick="toggleHabit(2)">
+          <div class="habit-check" id="hc2"></div>
+          <span class="habit-name" id="hn2">TikTok Shop (2h fechadas)</span>
+          <span class="habit-time">11h15</span>
+        </div>
+        <div class="habit-item" id="hi3" onclick="toggleHabit(3)">
+          <div class="habit-check" id="hc3"></div>
+          <span class="habit-name" id="hn3">Zero WhatsApp antes 7h30</span>
+          <span class="habit-time">regra</span>
+        </div>
+        <div class="habit-item" id="hi4" onclick="toggleHabit(4)">
+          <div class="habit-check" id="hc4"></div>
+          <span class="habit-name" id="hn4">Revisão noturna</span>
+          <span class="habit-time">21h30</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NOTIF BANNER -->
+  <div class="notif-banner" id="notifBanner">
+    <button class="notif-close" onclick="closeNotif()">x</button>
+    <div class="notif-title" id="notifTitle">Proximo bloco em 5 min</div>
+    <div class="notif-body" id="notifBody">Prepare-se para o proximo bloco.</div>
+  </div>
+
+  <!-- GOOGLE CALENDAR -->
+  <div style="margin-bottom:16px">
+    <div style="font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin:0 0 10px;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:3px;height:12px;border-radius:2px;background:var(--accent)"></span>google calendar + lembretes</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+      <div class="card">
+        <div class="card-title">eventos de hoje</div>
+        <div id="gcalNotConnected" class="gcal-connect">
+          <svg width="38" height="38" viewBox="0 0 38 38" fill="none"><rect width="38" height="38" rx="8" fill="var(--bg3)"/><rect x="7" y="9" width="24" height="22" rx="3" fill="none" stroke="var(--border2)" stroke-width="1.5"/><line x1="7" y1="15" x2="31" y2="15" stroke="var(--border2)" stroke-width="1.5"/><line x1="13" y1="7" x2="13" y2="12" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/><line x1="25" y1="7" x2="25" y2="12" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/><rect x="11" y="19" width="5" height="4" rx="1" fill="var(--accent2)"/><rect x="19" y="19" width="5" height="4" rx="1" fill="var(--muted)"/><rect x="11" y="26" width="5" height="4" rx="1" fill="var(--muted)"/></svg>
+          <div style="font-size:13px;color:var(--muted2);max-width:260px">Insira sua Google Client ID para ver eventos e criar a rotina no Calendar</div>
+          <input class="gcal-api-input" id="gcalClientId" placeholder="Cole sua Google Client ID aqui..." style="max-width:300px">
+          <button class="gcal-btn" onclick="initGcal()">Conectar Google Calendar</button>
+          <div class="gcal-status" id="gcalStatus">nao conectado</div>
+        </div>
+        <div id="gcalConnected" class="gcal-connected" style="padding:4px 0">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:12px;color:var(--green);font-family:'DM Mono',monospace">conectado</div>
+            <button class="gcal-btn-secondary" onclick="loadEvents()">atualizar</button>
+          </div>
+          <div id="gcalEventList"></div>
+          <div id="gcalEmpty" style="font-size:13px;color:var(--muted);padding:16px 0;text-align:center;display:none">Nenhum evento hoje</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">criar rotina no calendar</div>
+        <div style="font-size:12px;color:var(--muted2);margin-bottom:12px;line-height:1.6">Cria todos os blocos como eventos diarios com lembrete 5 min antes.</div>
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;max-height:160px;overflow-y:auto;padding-right:4px" id="gcalBlocosList"></div>
+        <button class="gcal-btn" onclick="criarRotinaNoCalendar()" style="width:100%;justify-content:center;margin-bottom:14px">Criar rotina no Calendar</button>
+        <div style="padding-top:14px;border-top:1px solid var(--border)">
+          <div class="card-title" style="margin-bottom:8px">lembretes no navegador</div>
+          <div style="font-size:12px;color:var(--muted2);margin-bottom:10px;line-height:1.5">Notificacao 5 min antes de cada bloco. Funciona sem Calendar conectado.</div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;color:var(--text)">Ativar lembretes</span>
+            <button id="toggleNotif" onclick="toggleNotificacoes()" style="background:var(--bg3);border:1px solid var(--border2);border-radius:99px;padding:5px 16px;color:var(--muted2);font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .2s">OFF</button>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;font-family:'DM Mono',monospace" id="notifPermStatus">permissao: nao solicitada</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GRID BOTTOM -->
+  <div class="grid-bottom">
+
+    <!-- ROTINA -->
+    <div class="card">
+      <div class="card-title">rotina do dia — todos os dias</div>
+      <div class="rotina-list" id="rotinaList">
+        <!-- preenchido por JS -->
+      </div>
+    </div>
+
+    <!-- FOCO + NOTAS -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="card-title">3 focos de hoje</div>
+        <div class="focos-list">
+          <div class="foco-item">
+            <span class="foco-num">01</span>
+            <input class="foco-input" id="f1" placeholder="Foco principal..." oninput="saveData()">
+          </div>
+          <div class="foco-item">
+            <span class="foco-num">02</span>
+            <input class="foco-input" id="f2" placeholder="Segundo foco..." oninput="saveData()">
+          </div>
+          <div class="foco-item">
+            <span class="foco-num">03</span>
+            <input class="foco-input" id="f3" placeholder="Terceiro foco..." oninput="saveData()">
+          </div>
+        </div>
+        <div class="save-ind" id="saveInd">salvo localmente ✓</div>
+      </div>
+      <div class="card">
+        <div class="card-title">anotações do dia</div>
+        <textarea class="nota-area" id="notas" placeholder="Ideias, lembretes, pendências..." rows="5" oninput="saveData()"></textarea>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+var rotina = [
+  {h:'05h00',e:300,s:330,nome:'Morning routine',desc:'Sem celular. Água, silêncio, abre dashboard.',tag:'ineg',tagTxt:'inegociável'},
+  {h:'05h30',e:330,s:390,nome:'Academia',desc:'1h de treino. Reset mental antes do trabalho.',tag:'ineg',tagTxt:'inegociável'},
+  {h:'06h30',e:390,s:450,nome:'Estudo e leitura',desc:'1h de input de qualidade. Zero redes sociais.',tag:'foco',tagTxt:'crescimento'},
+  {h:'07h30',e:450,s:495,nome:'Abertura operacional',desc:'1º WhatsApp: saldos, campanhas, urgências. Máx 45min.',tag:'cliente',tagTxt:'clientes'},
+  {h:'08h15',e:495,s:630,nome:'Deep work — agência',desc:'Estratégia, campanhas, processo comercial.',tag:'foco',tagTxt:'deep work'},
+  {h:'10h30',e:630,s:675,nome:'Check clientes',desc:'2º WhatsApp: follow-ups, alinhamentos. Máx 45min.',tag:'cliente',tagTxt:'clientes'},
+  {h:'11h15',e:675,s:795,nome:'TikTok Shop',desc:'2h fechadas. Produtos, afiliados, monetização.',tag:'ineg',tagTxt:'inegociável'},
+  {h:'13h15',e:795,s:840,nome:'Almoço + pausa',desc:'45min longe da tela. Recarga real.',tag:'off',tagTxt:'pausa'},
+  {h:'14h00',e:840,s:960,nome:'Deep work — cardápio',desc:'Captação e onboarding. Meta: 200 clientes.',tag:'foco',tagTxt:'escala'},
+  {h:'16h00',e:960,s:1050,nome:'Check clientes + reuniões',desc:'3º e último WhatsApp. Fecha pendentes.',tag:'cliente',tagTxt:'clientes'},
+  {h:'17h30',e:1050,s:1170,nome:'Família',desc:'Esposa e filhos. Sem trabalho. Inegociável.',tag:'vida',tagTxt:'família'},
+  {h:'19h30',e:1170,s:1290,nome:'Estratégia noturna',desc:'Planejamento, conteúdo TikTok, construção.',tag:'foco',tagTxt:'construção'},
+  {h:'21h30',e:1290,s:1320,nome:'Revisão + dashboard',desc:'Marca hábitos, define 3 focos de amanhã.',tag:'ineg',tagTxt:'inegociável'},
+  {h:'22h00',e:1320,s:1440,nome:'Wind down',desc:'Sem tela. Prepara pro 5h de amanhã.',tag:'off',tagTxt:'descanso'},
+];
+
+var tagClass = {ineg:'tag-ineg',foco:'tag-foco',cliente:'tag-cliente',vida:'tag-vida',off:'tag-off'};
+
+function buildRotina(){
+  var list = document.getElementById('rotinaList');
+  list.innerHTML = '';
+  rotina.forEach(function(b,i){
+    var d = document.createElement('div');
+    d.className = 'rotina-item';
+    d.id = 'ri'+i;
+    d.innerHTML = '<div class="rotina-hora">'+b.h+'</div><div class="rotina-info"><div class="rotina-nome">'+b.nome+'</div><div class="rotina-desc">'+b.desc+'</div></div><span class="tag-pill '+tagClass[b.tag]+'">'+b.tagTxt+'</span>';
+    list.appendChild(d);
+  });
+}
+
+var habits = [false,false,false,false,false];
+var msgs = ['nenhum ainda','ótimo início','metade lá','quase!','só mais um!','dia completo!'];
+
+function toggleHabit(i){
+  habits[i] = !habits[i];
+  var c = document.getElementById('hc'+i);
+  var n = document.getElementById('hn'+i);
+  var it = document.getElementById('hi'+i);
+  if(habits[i]){ c.className='habit-check done'; n.className='habit-name done'; it.className='habit-item done'; }
+  else { c.className='habit-check'; n.className='habit-name'; it.className='habit-item'; }
+  var d = habits.filter(Boolean).length;
+  document.getElementById('hDone').textContent = d;
+  document.getElementById('hMsg').textContent = msgs[d];
+  var circ = document.getElementById('ringCircle');
+  var perim = 150.8;
+  circ.style.strokeDashoffset = perim - (perim * d / 5);
+  saveData();
+}
+
+var clientes = {ag:15,cd:0,tk:0};
+
+function changeClientes(op, delta){
+  clientes[op] = Math.max(0, clientes[op]+delta);
+  document.getElementById('clAgencia').textContent = clientes.ag;
+  document.getElementById('clCardapio').textContent = clientes.cd;
+  document.getElementById('clTiktok').textContent = clientes.tk;
+  document.getElementById('opAgLabel').textContent = clientes.ag+' / 25';
+  document.getElementById('opAgBar').style.width = Math.min(100, clientes.ag/25*100)+'%';
+  document.getElementById('opCdLabel').textContent = clientes.cd+' / 200';
+  document.getElementById('opCdBar').style.width = Math.min(100, clientes.cd/200*100)+'%';
+  updateFat();
+  saveData();
+}
+
+function updateFat(){
+  var ag = clientes.ag * 1000;
+  var tk = clientes.tk * 500 + 5000;
+  var total = ag + tk;
+  document.getElementById('fatAgencia').textContent = ag.toLocaleString('pt-BR');
+  document.getElementById('fatTiktok').textContent = tk.toLocaleString('pt-BR');
+  document.getElementById('fatAtual').textContent = total.toLocaleString('pt-BR');
+  document.getElementById('pbFat').style.width = Math.min(100,total/100000*100)+'%';
+  document.getElementById('pbAg').style.width = Math.min(100,ag/100000*100)+'%';
+  document.getElementById('pbTk').style.width = Math.min(100,tk/100000*100)+'%';
+}
+
+function tick(){
+  var now = new Date();
+  var dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  var meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  document.getElementById('clock').textContent = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('dateStr').textContent = dias[now.getDay()]+', '+now.getDate()+' de '+meses[now.getMonth()]+' de '+now.getFullYear();
+  var mins = now.getHours()*60+now.getMinutes();
+  var atualIdx = -1;
+  rotina.forEach(function(b,i){
+    var el = document.getElementById('ri'+i);
+    if(!el) return;
+    if(mins >= b.e && mins < b.s){ el.className='rotina-item ativo'; atualIdx=i; }
+    else if(mins >= b.s){ el.className='rotina-item passado'; }
+    else { el.className='rotina-item'; }
+  });
+  if(atualIdx>=0){
+    document.getElementById('blocoAtualNome').textContent = rotina[atualIdx].nome;
+    var prox = rotina[atualIdx+1];
+    document.getElementById('proximoBloco').textContent = prox ? rotina[atualIdx+1].h+' — '+rotina[atualIdx+1].nome : '—';
+    var el = document.getElementById('ri'+atualIdx);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    document.getElementById('blocoAtualNome').textContent = mins < 300 ? 'dormindo (acorda às 5h!)' : 'dia encerrado';
+    document.getElementById('proximoBloco').textContent = '—';
+  }
+}
+
+var saveTimer;
+function saveData(){
+  var data = {
+    habits: habits,
+    clientes: clientes,
+    f1: document.getElementById('f1').value,
+    f2: document.getElementById('f2').value,
+    f3: document.getElementById('f3').value,
+    notas: document.getElementById('notas').value,
+    date: new Date().toDateString()
+  };
+  localStorage.setItem('dashboard_data', JSON.stringify(data));
+  var ind = document.getElementById('saveInd');
+  ind.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){ ind.classList.remove('show'); }, 2000);
+}
+
+function loadData(){
+  var raw = localStorage.getItem('dashboard_data');
+  if(!raw) return;
+  var data = JSON.parse(raw);
+  if(data.date !== new Date().toDateString()){
+    habits = [false,false,false,false,false];
+    return;
+  }
+  if(data.habits){ data.habits.forEach(function(v,i){ if(v) toggleHabit(i); }); }
+  if(data.clientes){ clientes = data.clientes; changeClientes('ag',0); }
+  if(data.f1) document.getElementById('f1').value = data.f1;
+  if(data.f2) document.getElementById('f2').value = data.f2;
+  if(data.f3) document.getElementById('f3').value = data.f3;
+  if(data.notas) document.getElementById('notas').value = data.notas;
+}
+
+buildRotina();
+tick();
+setInterval(tick, 10000);
+updateFat();
+loadData();
+buildGcalBlocos();
+startNotifChecker();
+
+// ── GOOGLE CALENDAR ──────────────────────────────────────
+var gcalInited = false;
+var notifAtivo = false;
+var notifTimer = null;
+var notifShown = {};
+
+function buildGcalBlocos(){
+  var list = document.getElementById('gcalBlocosList');
+  if(!list) return;
+  list.innerHTML = '';
+  rotina.forEach(function(b){
+    var d = document.createElement('div');
+    d.style.cssText = 'display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--muted2)';
+    d.innerHTML = '<span style="font-family:\'DM Mono\',monospace;color:var(--accent);min-width:42px">'+b.h+'</span><span style="color:var(--text)">'+b.nome+'</span>';
+    list.appendChild(d);
+  });
+}
+
+function initGcal(){
+  var clientId = document.getElementById('gcalClientId').value.trim();
+  if(!clientId){ document.getElementById('gcalStatus').textContent = 'cole sua Client ID primeiro'; return; }
+  document.getElementById('gcalStatus').textContent = 'conectando...';
+  localStorage.setItem('gcal_client_id', clientId);
+  var script = document.createElement('script');
+  script.src = 'https://accounts.google.com/gsi/client';
+  script.onload = function(){
+    google.accounts.oauth2.initTokenClient({
+      client_id: clientId,
+      scope: 'https://www.googleapis.com/auth/calendar',
+      callback: function(resp){
+        if(resp.access_token){
+          localStorage.setItem('gcal_token', resp.access_token);
+          gcalInited = true;
+          document.getElementById('gcalNotConnected').style.display = 'none';
+          document.getElementById('gcalConnected').style.display = 'block';
+          loadEvents();
+        } else {
+          document.getElementById('gcalStatus').textContent = 'erro ao autenticar';
+        }
+      }
+    }).requestAccessToken();
+  };
+  script.onerror = function(){ document.getElementById('gcalStatus').textContent = 'erro ao carregar SDK do Google'; };
+  document.head.appendChild(script);
+}
+
+function loadEvents(){
+  var token = localStorage.getItem('gcal_token');
+  if(!token) return;
+  var now = new Date();
+  var start = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+  var end = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1).toISOString();
+  fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+encodeURIComponent(start)+'&timeMax='+encodeURIComponent(end)+'&singleEvents=true&orderBy=startTime&maxResults=20', {
+    headers: { 'Authorization': 'Bearer '+token }
+  }).then(function(r){ return r.json(); }).then(function(data){
+    var list = document.getElementById('gcalEventList');
+    list.innerHTML = '';
+    var events = (data.items || []).filter(function(e){ return e.start && (e.start.dateTime || e.start.date); });
+    if(events.length === 0){ document.getElementById('gcalEmpty').style.display = 'block'; return; }
+    document.getElementById('gcalEmpty').style.display = 'none';
+    var colors = ['#7c6dfa','#2dd4bf','#f59e0b','#22c55e','#f43f5e','#a594fd'];
+    events.forEach(function(ev, i){
+      var timeStr = ev.start.dateTime ? new Date(ev.start.dateTime).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : 'dia todo';
+      var d = document.createElement('div');
+      d.className = 'gcal-event';
+      d.innerHTML = '<div class="gcal-dot" style="background:'+colors[i%colors.length]+'"></div><div style="flex:1"><div class="gcal-event-time">'+timeStr+'</div><div class="gcal-event-title">'+ev.summary+'</div>'+(ev.location?'<div class="gcal-event-sub">'+ev.location+'</div>':'')+'</div>';
+      list.appendChild(d);
+    });
+  }).catch(function(){ document.getElementById('gcalStatus').textContent = 'token expirado — reconecte'; });
+}
+
+function criarRotinaNoCalendar(){
+  var token = localStorage.getItem('gcal_token');
+  if(!token){ showNotifBanner('Calendar nao conectado','Conecte sua conta Google primeiro.'); return; }
+  var today = new Date();
+  var yyyy = today.getFullYear(), mm = String(today.getMonth()+1).padStart(2,'0'), dd = String(today.getDate()).padStart(2,'0');
+  var created = 0;
+  rotina.forEach(function(b, i){
+    var startH = Math.floor(b.e/60), startM = b.e%60;
+    var endH = Math.floor(b.s/60), endM = b.s%60;
+    var startISO = yyyy+'-'+mm+'-'+dd+'T'+String(startH).padStart(2,'0')+':'+String(startM).padStart(2,'0')+':00';
+    var endISO = yyyy+'-'+mm+'-'+dd+'T'+String(endH).padStart(2,'0')+':'+String(endM).padStart(2,'0')+':00';
+    var event = {
+      summary: b.nome,
+      description: b.desc,
+      start: { dateTime: startISO, timeZone: 'America/Sao_Paulo' },
+      end: { dateTime: endISO, timeZone: 'America/Sao_Paulo' },
+      recurrence: ['RRULE:FREQ=DAILY'],
+      reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 5 }] }
+    };
+    setTimeout(function(){
+      fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer '+token, 'Content-Type': 'application/json' },
+        body: JSON.stringify(event)
+      }).then(function(r){ return r.json(); }).then(function(data){
+        created++;
+        if(created === rotina.length){
+          showNotifBanner('Rotina criada!', rotina.length+' blocos adicionados ao seu Google Calendar com lembrete de 5 min.');
+          loadEvents();
+        }
+      });
+    }, i * 300);
+  });
+}
+
+// ── LEMBRETES NO NAVEGADOR ────────────────────────────────
+function toggleNotificacoes(){
+  if(!notifAtivo){
+    if('Notification' in window){
+      Notification.requestPermission().then(function(perm){
+        if(perm === 'granted'){
+          notifAtivo = true;
+          document.getElementById('toggleNotif').textContent = 'ON';
+          document.getElementById('toggleNotif').style.background = 'var(--accent)';
+          document.getElementById('toggleNotif').style.color = '#fff';
+          document.getElementById('notifPermStatus').textContent = 'permissao: concedida';
+          showNotifBanner('Lembretes ativados!','Voce sera avisado 5 min antes de cada bloco.');
+        } else {
+          document.getElementById('notifPermStatus').textContent = 'permissao: negada pelo navegador';
+        }
+      });
+    } else {
+      notifAtivo = true;
+      document.getElementById('toggleNotif').textContent = 'ON';
+      document.getElementById('toggleNotif').style.background = 'var(--accent)';
+      document.getElementById('toggleNotif').style.color = '#fff';
+    }
+  } else {
+    notifAtivo = false;
+    document.getElementById('toggleNotif').textContent = 'OFF';
+    document.getElementById('toggleNotif').style.background = 'var(--bg3)';
+    document.getElementById('toggleNotif').style.color = 'var(--muted2)';
+    document.getElementById('notifPermStatus').textContent = 'lembretes desativados';
+  }
+}
+
+function startNotifChecker(){
+  setInterval(function(){
+    if(!notifAtivo) return;
+    var now = new Date();
+    var mins = now.getHours()*60 + now.getMinutes();
+    rotina.forEach(function(b){
+      var chaveKey = 'notif_'+b.h+'_'+new Date().toDateString();
+      if(mins === b.e - 5 && !notifShown[chaveKey]){
+        notifShown[chaveKey] = true;
+        var msg = 'Em 5 min: '+b.nome;
+        showNotifBanner('Proximo bloco', msg);
+        if('Notification' in window && Notification.permission === 'granted'){
+          new Notification('Erik Pimenta — Rotina', { body: msg, icon: '' });
+        }
+      }
+    });
+  }, 30000);
+}
+
+function showNotifBanner(title, body){
+  document.getElementById('notifTitle').textContent = title;
+  document.getElementById('notifBody').textContent = body;
+  var banner = document.getElementById('notifBanner');
+  banner.classList.add('show');
+  setTimeout(function(){ banner.classList.remove('show'); }, 5000);
+}
+
+function closeNotif(){
+  document.getElementById('notifBanner').classList.remove('show');
+}
+</script>
+</body>
+</html>
